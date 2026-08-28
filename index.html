@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI & Market Daily</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><div class="container nav">
+<a class="logo" href="./">AI <span>&</span> Market Daily</a>
+<div id="today"></div>
+</div></header>
+<main class="container">
+<section class="hero">
+<div><div class="label">DAILY BRIEF</div><h1>วันนี้ต้องรู้อะไรบ้าง</h1>
+<p>ข่าว AI และตลาดที่สำคัญ สรุปให้เข้าใจง่ายในไม่กี่นาที</p></div>
+<div class="badge">☀️ อัปเดตอัตโนมัติ</div>
+</section>
+
+<section><div class="section-title"><div><div class="label">QUICK SUMMARY</div><h2>สรุปวันนี้ใน 1 นาที</h2></div></div>
+<div id="summary" class="summary"></div></section>
+
+<section><div class="section-title"><div><div class="label">AI</div><h2>ข่าว AI วันนี้</h2></div><span id="newsCount"></span></div>
+<div id="news" class="news-list"><div class="loading">กำลังโหลดข่าว…</div></div></section>
+
+<section><div class="section-title"><div><div class="label">MARKET</div><h2>ตลาดที่ติดตาม</h2></div><span class="muted">ไม่ใช่คำแนะนำการลงทุน</span></div>
+<div id="markets" class="market-grid"></div></section>
+
+<section><div class="section-title"><div><div class="label">WEEKLY</div><h2>สรุปประจำสัปดาห์</h2></div></div>
+<div id="weekly" class="weekly"><div class="loading">กำลังโหลด…</div></div></section>
+</main>
+<footer class="container">AI & Market Daily · Auto News</footer>
+<script src="app.js"></script>
+</body></html>
