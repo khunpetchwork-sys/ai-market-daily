@@ -63,7 +63,7 @@ prompt='''คุณเป็นบรรณาธิการเว็บข่�
 ข่าว:
 '''+json.dumps(items,ensure_ascii=False)
 
-endpoint="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+endpoint="https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent"
 
 payload=json.dumps({
  "contents":[
