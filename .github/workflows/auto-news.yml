@@ -2,7 +2,7 @@ name: Auto News Daily
 
 on:
   schedule:
-    - cron: '0 1,13 * * *'
+    - cron: '30 1 * * *'
   workflow_dispatch:
 
 permissions:
