@@ -1,4 +1,3 @@
-```text
 import os
 import json
 import re
@@ -472,4 +471,3 @@ print(
     "RSS sources:",
     len(items)
 )
-```
