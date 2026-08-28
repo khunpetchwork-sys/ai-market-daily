@@ -1,4 +1,5 @@
-import os,json,re,html
+```python
+import os,json,re,html,time
 from datetime import datetime,timezone
 from urllib.request import Request,urlopen
 import urllib.error
@@ -235,21 +236,86 @@ payload=json.dumps({
  }
 },ensure_ascii=False).encode("utf-8")
 
-try:
- req=Request(
-  endpoint,
-  data=payload,
-  headers={
-   "Content-Type":"application/json",
-   "x-goog-api-key":api
-  }
- )
 
- raw=urlopen(req,timeout=90).read()
+# ==========================================
+# Gemini API + AUTO RETRY
+# ==========================================
 
-except urllib.error.HTTPError as e:
- detail=e.read().decode("utf-8",errors="replace")
- raise SystemExit(f"Gemini API HTTP {e.code}: {detail}")
+MAX_RETRIES=4
+
+# เวลารอก่อนลองใหม่
+RETRY_DELAYS=[10,30,60]
+
+for attempt in range(1,MAX_RETRIES+1):
+
+ print(f"Gemini request attempt {attempt}/{MAX_RETRIES}")
+
+ try:
+
+  req=Request(
+   endpoint,
+   data=payload,
+   headers={
+    "Content-Type":"application/json",
+    "x-goog-api-key":api
+   }
+  )
+
+  raw=urlopen(req,timeout=90).read()
+
+  # สำเร็จ
+  print("Gemini API success")
+  break
+
+ except urllib.error.HTTPError as e:
+
+  detail=e.read().decode("utf-8",errors="replace")
+
+  # 503 = Gemini มีโหลดสูงชั่วคราว
+  # 429 = rate limit / resource exhausted ชั่วคราว
+  if e.code in (503,429) and attempt<MAX_RETRIES:
+
+   delay=RETRY_DELAYS[attempt-1]
+
+   print(
+    f"Gemini API HTTP {e.code}. "
+    f"Retrying in {delay} seconds..."
+   )
+
+   time.sleep(delay)
+
+   continue
+
+  # API key ผิด / permission / endpoint ผิด
+  # ไม่ควร retry เพราะ retry ก็ไม่ช่วย
+  raise SystemExit(
+   f"Gemini API HTTP {e.code}: {detail}"
+  )
+
+ except Exception as e:
+
+  # Network error เช่น connection หลุด
+  if attempt<MAX_RETRIES:
+
+   delay=RETRY_DELAYS[attempt-1]
+
+   print(
+    f"Network error: {e}. "
+    f"Retrying in {delay} seconds..."
+   )
+
+   time.sleep(delay)
+
+   continue
+
+  raise SystemExit(
+   f"Gemini request failed after {MAX_RETRIES} attempts: {e}"
+  )
+
+
+# ==========================================
+# อ่านผล Gemini
+# ==========================================
 
 response=json.loads(raw)
 
@@ -263,4 +329,9 @@ out["source_count"]=len(items)
 with open("data/news.json","w",encoding="utf-8") as f:
  json.dump(out,f,ensure_ascii=False,indent=2)
 
-print("Updated",len(out.get("news",[])),"news")
+print(
+ "Updated",
+ len(out.get("news",[])),
+ "news"
+)
+```
